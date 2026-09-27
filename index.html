@@ -242,7 +242,7 @@ function toRecord(o){
   const produk = pick(o,['produk','product']) || '-';
   let gram = parseNum(pick(o,['gram','berat','perolehan gram','perolehan']));
   if(isNaN(gram)) gram = 0;
-  let reward = parseNum(pick(o,['Nilai_Reward_Rp']));
+  let reward = parseNum(pick(o,['nilai_reward_rp','reward_rp','nilai reward','reward','fee','nilai']));
   let status = pick(o,['status','pencapaian']);
   status = status ? (norm(status).includes('belum') ? 'Belum Achieve' : 'Achieve') : (gram>=5 ? 'Achieve' : 'Belum Achieve');
   return {nama, cabang, produk, gram, reward, status};
