@@ -90,7 +90,7 @@ button{font:inherit;cursor:pointer;border:none;}
 .lead-item .who{flex:1;min-width:0;}
 .lead-item .who b{display:block;font-size:13.5px;}
 .lead-item .who span{font-size:11.5px;color:var(--ink-soft);}
-.lead-item .g{font-weight:800;color:var(--green-deep);font-size:14px;}
+.lead-item .g{font-weight:800;color:var(--green-deep);font-size:14px;white-space:nowrap;}
 
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
 select,input[type=text]{padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:13px;}
@@ -130,7 +130,8 @@ tr:last-child td{border-bottom:none;}
     <div class="brand"><div class="mark">🪙</div><div><h1>Reward Fee</h1><span>Pemasar Emas</span></div></div>
     <nav id="nav">
       <a href="#overview" class="active">Overview</a>
-      <a href="#monitoring">Monitoring Pemasar</a>
+      <a href="#monitoring">Monitoring Pegawai</a>
+      <a href="#gramasi">Gramasi Nasabah</a>
       <a href="#detail">Detail Data</a>
       <a href="#scheme">Skema Reward</a>
     </nav>
@@ -147,33 +148,47 @@ tr:last-child td{border-bottom:none;}
     </div>
 
     <section class="hero section" id="overview">
-      <p class="tag">PROGRAM INSENTIF PEMASAR</p>
+      <p class="tag">PROGRAM INSENTIF PEGAWAI</p>
       <h2>Closing emas, raih reward.</h2>
-      <p class="sub">Program reward untuk karyawan jabatan Pemasar yang berhasil closing produk emas dengan perolehan minimal 5 gram. Impor data cleansing (Excel, CSV, atau JSON) untuk mengaktifkan seluruh KPI, chart, leaderboard, dan tabel di bawah ini.</p>
+      <p class="sub">Program reward untuk pegawai (Karyawan_Penerima_Reward) atas closing produk emas nasabah (Nama_Nasabah) dengan perolehan minimal 5 gram (Gramasi_Closing). Impor data cleansing (Excel, CSV, atau JSON) untuk mengaktifkan seluruh KPI, chart, leaderboard, dan tabel di bawah ini.</p>
     </section>
 
     <section class="section">
       <div id="kpiEmpty" class="empty"><b>Dataset cleansing belum tersedia di project ini</b>Dashboard tidak menampilkan angka buatan. Impor file Excel (.xlsx), CSV, atau JSON hasil cleansing untuk mengaktifkan seluruh KPI, chart, leaderboard, dan tabel.</div>
       <div class="kpis" id="kpis" style="display:none;">
-        <div class="kpi"><div class="lbl">Total Pemasar</div><div class="val" id="kpiPemasar">0</div></div>
+        <div class="kpi"><div class="lbl">Total Pegawai Penerima Reward</div><div class="val" id="kpiPemasar">0</div></div>
         <div class="kpi"><div class="lbl">Total Perolehan (gram)</div><div class="val" id="kpiGram">0</div></div>
-        <div class="kpi"><div class="lbl">Pemasar Achieve</div><div class="val" id="kpiAchieve">0</div></div>
-        <div class="kpi"><div class="lbl">Total Reward</div><div class="val" id="kpiReward">—</div></div>
+        <div class="kpi"><div class="lbl">Nasabah Achieve (≥5g)</div><div class="val" id="kpiAchieve">0</div></div>
+        <div class="kpi"><div class="lbl">Total Reward (Rp)</div><div class="val" id="kpiReward">—</div></div>
       </div>
     </section>
 
     <section class="section" id="monitoring">
       <h3>Analisis Perolehan</h3>
-      <p class="desc">Ringkasan per cabang, produk, dan pencapaian target.</p>
-      <div id="monEmpty" class="empty"><b>Belum ada data untuk ditampilkan</b>Impor data untuk melihat perolehan per cabang dan leaderboard pemasar.</div>
+      <p class="desc">Ringkasan per cabang (Nama_Cabang) dan leaderboard pegawai penerima reward.</p>
+      <div id="monEmpty" class="empty"><b>Belum ada data untuk ditampilkan</b>Impor data untuk melihat perolehan per cabang dan leaderboard pegawai.</div>
       <div class="grid2" id="monPanels" style="display:none;">
         <div class="panel">
           <h3 style="font-size:14px;margin-bottom:14px;">Perolehan Gram per Cabang</h3>
           <div id="branchChart"></div>
         </div>
         <div class="panel">
-          <h3 style="font-size:14px;margin-bottom:14px;">Leaderboard Pemasar — Top 5</h3>
+          <h3 style="font-size:14px;margin-bottom:14px;">Leaderboard Pegawai — Top 5</h3>
           <div class="lead" id="leaderboard"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="gramasi">
+      <h3>Ringkasan Gramasi Closing per Nasabah</h3>
+      <p class="desc">Total Gramasi_Closing dikelompokkan per Nama_Nasabah.</p>
+      <div id="nasabahEmpty" class="empty"><b>Belum ada data nasabah</b>Impor data untuk melihat ringkasan gramasi per nasabah.</div>
+      <div id="nasabahWrap" style="display:none;">
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Nasabah</th><th>Cabang</th><th>Jumlah Closing</th><th>Total Gram</th><th>Status</th></tr></thead>
+            <tbody id="tbodyNasabah"></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -186,11 +201,11 @@ tr:last-child td{border-bottom:none;}
         <div class="filters">
           <select id="fCabang"><option value="">Semua cabang</option></select>
           <select id="fStatus"><option value="">Semua status</option><option value="Achieve">Achieve</option><option value="Belum Achieve">Belum Achieve</option></select>
-          <input type="text" id="fSearch" placeholder="Cari nama pemasar…">
+          <input type="text" id="fSearch" placeholder="Cari nasabah atau pegawai…">
         </div>
         <div class="tablewrap">
           <table>
-            <thead><tr><th>Nama</th><th>Cabang</th><th>Produk</th><th>Gram</th><th>Status</th><th>Reward</th></tr></thead>
+            <thead><tr><th>Nasabah</th><th>Karyawan Penerima Reward</th><th>Cabang</th><th>Produk</th><th>Gram</th><th>Status</th><th>Reward</th></tr></thead>
             <tbody id="tbody"></tbody>
           </table>
         </div>
@@ -201,8 +216,8 @@ tr:last-child td{border-bottom:none;}
       <h3>Skema Reward</h3>
       <p class="desc">Ketentuan ditampilkan hanya jika tersedia di data cleansing.</p>
       <div class="scheme">
-        <div><div class="num">5g</div><h4>Target minimal program</h4><p>Closing emas dengan pencapaian terukur — pemasar wajib membukukan penjualan minimal 5 gram untuk memenuhi syarat reward.</p></div>
-        <div><div class="num" id="schemeReward">—</div><h4>Besaran reward</h4><p>Mengikuti nilai yang terdapat pada dataset sumber. Data adalah single source of truth dari dataset cleansing yang diimpor pengguna.</p></div>
+        <div><div class="num">5g</div><h4>Target minimal program</h4><p>Closing emas nasabah dengan pencapaian terukur — perolehan (Gramasi_Closing) wajib minimal 5 gram agar pegawai terkait memenuhi syarat reward.</p></div>
+        <div><div class="num" id="schemeReward">—</div><h4>Besaran reward</h4><p>Rata-rata Nilai_Reward_Rp per pegawai. Data adalah single source of truth dari dataset cleansing yang diimpor pengguna.</p></div>
       </div>
     </section>
   </main>
@@ -213,6 +228,9 @@ let records = [];
 try{ const saved = localStorage.getItem('rf_records'); if(saved) records = JSON.parse(saved); }catch(e){}
 
 function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+// normKey strips spaces/underscores/punctuation so headers like
+// "Nama_Nasabah", "Nama Nasabah", "nama-nasabah" all match the same candidate.
+function normKey(s){ return (s||'').toString().trim().toLowerCase().replace(/[^a-z0-9]/g,''); }
 function parseNum(val){
   if(val===undefined||val===null||val==='') return NaN;
   if(typeof val === 'number') return val;
@@ -226,26 +244,28 @@ function parseNum(val){
 }
 function pick(obj, cands){
   const keys = Object.keys(obj);
-  for(const c of cands){
-    const k = keys.find(k=>norm(k)===c);
-    if(k) return obj[k];
+  const normCands = cands.map(normKey);
+  for(const key of keys){
+    const nk = normKey(key);
+    if(normCands.includes(nk)) return obj[key];
   }
-  for(const c of cands){
-    const k = keys.find(k=>norm(k).includes(c));
-    if(k) return obj[k];
+  for(const key of keys){
+    const nk = normKey(key);
+    if(normCands.some(c=>nk.includes(c))) return obj[key];
   }
   return undefined;
 }
 function toRecord(o){
-  const nama = pick(o,['nama','pemasar','nama pemasar','sales']) || '-';
-  const cabang = pick(o,['cabang','outlet','unit']) || '-';
+  const nasabah = pick(o,['namanasabah','nasabah']) || '-';
+  const karyawan = pick(o,['karyawanpenerimareward','pegawaipenerimareward','namakaryawan','namapegawai','karyawan','pegawai']) || '-';
+  const cabang = pick(o,['namacabang','cabang','outlet','unit']) || '-';
   const produk = pick(o,['produk','product']) || '-';
-  let gram = parseNum(pick(o,['gram','berat','perolehan gram','perolehan']));
+  let gram = parseNum(pick(o,['gramasiclosing','gramasi','gramclosing','gram','beratclosing','perolehangram','perolehan']));
   if(isNaN(gram)) gram = 0;
-  let reward = parseNum(pick(o,['nilai_reward_rp','reward_rp','nilai reward','reward','fee','nilai']));
+  let reward = parseNum(pick(o,['nilairewardrp','nilaireward','rewardrp','reward','fee']));
   let status = pick(o,['status','pencapaian']);
   status = status ? (norm(status).includes('belum') ? 'Belum Achieve' : 'Achieve') : (gram>=5 ? 'Achieve' : 'Belum Achieve');
-  return {nama, cabang, produk, gram, reward, status};
+  return {nasabah, karyawan, cabang, produk, gram, reward, status};
 }
 function parseCSV(text){
   const lines = text.split(/\r?\n/).filter(l=>l.trim().length);
@@ -273,7 +293,7 @@ function handleFile(file){
       } else {
         raw = parseCSV(e.target.result);
       }
-      records = (Array.isArray(raw)?raw:[]).map(toRecord).filter(r=>r.nama!=='-');
+      records = (Array.isArray(raw)?raw:[]).map(toRecord).filter(r=> !(r.nasabah==='-' && r.karyawan==='-'));
       try{ localStorage.setItem('rf_records', JSON.stringify(records)); }catch(err){}
       render();
     }catch(err){ alert('Gagal membaca file. Pastikan format Excel/CSV/JSON valid.'); }
@@ -292,26 +312,43 @@ function render(){
   document.getElementById('kpis').style.display = has ? 'grid' : 'none';
   document.getElementById('monEmpty').style.display = has ? 'none' : 'block';
   document.getElementById('monPanels').style.display = has ? 'grid' : 'none';
+  document.getElementById('nasabahEmpty').style.display = has ? 'none' : 'block';
+  document.getElementById('nasabahWrap').style.display = has ? 'block' : 'none';
   document.getElementById('tblEmpty').style.display = has ? 'none' : 'block';
   document.getElementById('tblWrap').style.display = has ? 'block' : 'none';
   if(!has) return;
 
-  const byName = {};
-  records.forEach(r=>{ byName[r.nama] = byName[r.nama] || {nama:r.nama, gram:0, reward:0, hasReward:false};
-    byName[r.nama].gram += r.gram;
-    if(!isNaN(r.reward)){ byName[r.nama].reward += r.reward; byName[r.nama].hasReward=true; } });
-  const people = Object.values(byName);
+  // Reward summary per pegawai (Karyawan_Penerima_Reward + Nilai_Reward_Rp)
+  const byKaryawan = {};
+  records.forEach(r=>{
+    byKaryawan[r.karyawan] = byKaryawan[r.karyawan] || {nama:r.karyawan, gram:0, reward:0, hasReward:false, count:0};
+    byKaryawan[r.karyawan].gram += r.gram;
+    byKaryawan[r.karyawan].count += 1;
+    if(!isNaN(r.reward)){ byKaryawan[r.karyawan].reward += r.reward; byKaryawan[r.karyawan].hasReward = true; }
+  });
+  const pegawaiList = Object.values(byKaryawan).filter(p=>p.nama!=='-');
+
+  // Gramasi closing summary per nasabah (Nama_Nasabah + Gramasi_Closing)
+  const byNasabah = {};
+  records.forEach(r=>{
+    byNasabah[r.nasabah] = byNasabah[r.nasabah] || {nama:r.nasabah, cabang:r.cabang, gram:0, count:0};
+    byNasabah[r.nasabah].gram += r.gram;
+    byNasabah[r.nasabah].count += 1;
+  });
+  const nasabahList = Object.values(byNasabah).filter(n=>n.nama!=='-');
+
   const totalGram = records.reduce((s,r)=>s+r.gram,0);
-  const achievers = people.filter(p=>p.gram>=5).length;
+  const achievers = nasabahList.filter(n=>n.gram>=5).length;
   const anyReward = records.some(r=>!isNaN(r.reward));
   const totalReward = anyReward ? records.reduce((s,r)=>s+(isNaN(r.reward)?0:r.reward),0) : null;
 
-  document.getElementById('kpiPemasar').textContent = people.length;
+  document.getElementById('kpiPemasar').textContent = pegawaiList.length;
   document.getElementById('kpiGram').textContent = totalGram.toLocaleString('id-ID',{maximumFractionDigits:1});
   document.getElementById('kpiAchieve').textContent = achievers;
   document.getElementById('kpiReward').textContent = anyReward ? ('Rp '+totalReward.toLocaleString('id-ID')) : '—';
-  document.getElementById('schemeReward').textContent = anyReward ? ('Rp '+Math.round(totalReward/(people.length||1)).toLocaleString('id-ID')+'/rata²') : '—';
+  document.getElementById('schemeReward').textContent = anyReward ? ('Rp '+Math.round(totalReward/(pegawaiList.length||1)).toLocaleString('id-ID')+'/pegawai') : '—';
 
+  // Perolehan gram per cabang (Nama_Cabang)
   const byBranch = {};
   records.forEach(r=>{ byBranch[r.cabang] = (byBranch[r.cabang]||0) + r.gram; });
   const maxB = Math.max(...Object.values(byBranch),1);
@@ -319,10 +356,19 @@ function render(){
     `<div class="bar-row"><div class="name" title="${name}">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(val/maxB*100).toFixed(1)}%"></div></div><div class="num">${val.toLocaleString('id-ID',{maximumFractionDigits:1})}g</div></div>`
   ).join('') || '<p style="color:var(--ink-soft);font-size:13px;">Tidak ada data cabang.</p>';
 
-  const top5 = [...people].sort((a,b)=>b.gram-a.gram).slice(0,5);
+  // Leaderboard pegawai — ranked by total reward Rp jika tersedia, jika tidak berdasarkan gram
+  const top5 = [...pegawaiList].sort((a,b)=> anyReward ? (b.reward-a.reward) : (b.gram-a.gram)).slice(0,5);
   document.getElementById('leaderboard').innerHTML = top5.map((p,i)=>
-    `<div class="lead-item"><div class="rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}">${i+1}</div><div class="who"><b>${p.nama}</b><span>${p.hasReward?('Rp '+p.reward.toLocaleString('id-ID')):(p.gram>=5?'Achieve':'Belum Achieve')}</span></div><div class="g">${p.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}g</div></div>`
-  ).join('') || '<p style="color:var(--ink-soft);font-size:13px;">Belum ada pemasar.</p>';
+    `<div class="lead-item"><div class="rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}">${i+1}</div><div class="who"><b>${p.nama}</b><span>${p.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}g • ${p.count} closing</span></div><div class="g">${p.hasReward?('Rp '+p.reward.toLocaleString('id-ID')):'—'}</div></div>`
+  ).join('') || '<p style="color:var(--ink-soft);font-size:13px;">Belum ada pegawai.</p>';
+
+  // Tabel ringkasan gramasi per nasabah
+  const nasabahSorted = [...nasabahList].sort((a,b)=>b.gram-a.gram);
+  document.getElementById('tbodyNasabah').innerHTML = nasabahSorted.map(n=>{
+    const st = n.gram>=5 ? 'Achieve' : 'Belum Achieve';
+    return `<tr><td>${n.nama}</td><td>${n.cabang}</td><td>${n.count}</td><td>${n.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}</td>
+     <td><span class="tag-status ${st==='Achieve'?'tag-ok':'tag-bad'}">${st}</span></td></tr>`;
+  }).join('') || '<tr><td colspan="5" style="color:var(--ink-soft);text-align:center;">Belum ada nasabah.</td></tr>';
 
   const cabangSel = document.getElementById('fCabang');
   const cabangs = [...new Set(records.map(r=>r.cabang))].sort();
@@ -335,13 +381,14 @@ function drawTable(){
   const stat = document.getElementById('fStatus').value;
   const search = norm(document.getElementById('fSearch').value);
   const rows = records.filter(r=>
-    (!cab || r.cabang===cab) && (!stat || r.status===stat) && (!search || norm(r.nama).includes(search))
+    (!cab || r.cabang===cab) && (!stat || r.status===stat) &&
+    (!search || norm(r.nasabah).includes(search) || norm(r.karyawan).includes(search))
   );
   document.getElementById('tbody').innerHTML = rows.map(r=>
-    `<tr><td>${r.nama}</td><td>${r.cabang}</td><td>${r.produk}</td><td>${r.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}</td>
+    `<tr><td>${r.nasabah}</td><td>${r.karyawan}</td><td>${r.cabang}</td><td>${r.produk}</td><td>${r.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}</td>
      <td><span class="tag-status ${r.status==='Achieve'?'tag-ok':'tag-bad'}">${r.status}</span></td>
      <td>${isNaN(r.reward)?'—':('Rp '+r.reward.toLocaleString('id-ID'))}</td></tr>`
-  ).join('') || '<tr><td colspan="6" style="color:var(--ink-soft);text-align:center;">Tidak ada baris cocok dengan filter.</td></tr>';
+  ).join('') || '<tr><td colspan="7" style="color:var(--ink-soft);text-align:center;">Tidak ada baris cocok dengan filter.</td></tr>';
 }
 ['fCabang','fStatus','fSearch'].forEach(id=>document.getElementById(id).addEventListener('input',drawTable));
 
