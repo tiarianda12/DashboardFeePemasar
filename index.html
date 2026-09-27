@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reward Fee Pemasar — Pegadaian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-deep:#0B4A38; --green:#12805A; --green-soft:#E4F3EC;
+  --gold:#E8A400; --gold-soft:#FDF1D6; --amber:#F0630F;
+  --cream:#FBF8F1; --card:#FFFFFF; --ink:#17241E; --ink-soft:#5C6B63;
+  --line:#E7E1D3; --ok:#12805A; --bad:#D2401F;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --cream:#101512; --card:#171D19; --ink:#EDEFEA; --ink-soft:#9AA69E; --line:#26302A;
+    --green-soft:#122B22; --gold-soft:#2A2211;
+  }
+}
+:root[data-theme="dark"]{
+  --cream:#101512; --card:#171D19; --ink:#EDEFEA; --ink-soft:#9AA69E; --line:#26302A;
+  --green-soft:#122B22; --gold-soft:#2A2211;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth;}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.5;}
+h1,h2,h3{font-family:Sora,system-ui,sans-serif;margin:0;}
+a{color:inherit;}
+::-webkit-scrollbar{height:8px;width:8px;} ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+
+.shell{display:flex;min-height:100vh;}
+.side{width:240px;flex:0 0 auto;background:linear-gradient(190deg,var(--green-deep),var(--green) 130%);color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:26px;}
+.brand{display:flex;align-items:center;gap:10px;padding:0 4px;}
+.brand .mark{width:36px;height:36px;border-radius:10px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;}
+.brand div h1{font-size:15px;color:#fff;}
+.brand div span{font-size:11px;color:#CFE7DA;}
+nav{display:flex;flex-direction:column;gap:2px;}
+nav a{padding:10px 12px;border-radius:9px;font-size:13.5px;font-weight:600;color:#DDEFE4;text-decoration:none;opacity:.85;transition:background .15s;}
+nav a:hover{background:rgba(255,255,255,.08);opacity:1;}
+nav a.active{background:rgba(255,255,255,.16);opacity:1;color:#fff;}
+.side .foot{margin-top:auto;font-size:11px;color:#BFE0CE;opacity:.8;}
+
+.main{flex:1;min-width:0;padding:26px 30px 60px;}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.crumb{font-size:12px;color:var(--ink-soft);}
+.crumb b{color:var(--ink);}
+.actions{display:flex;gap:10px;flex-wrap:wrap;}
+button{font:inherit;cursor:pointer;border:none;}
+.btn{background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;}
+.btn.gold{background:var(--gold);color:#211a03;}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+.btn:hover{filter:brightness(1.06);}
+
+.hero{background:linear-gradient(120deg,var(--green-deep),var(--green) 65%,var(--gold) 145%);border-radius:20px;padding:28px 26px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden;}
+.hero::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);}
+.hero p.tag{font-size:12px;font-weight:700;letter-spacing:.2px;color:var(--gold-soft);opacity:.9;margin-bottom:8px;}
+.hero h2{font-size:26px;color:#fff;max-width:560px;}
+.hero p.sub{margin-top:10px;max-width:560px;color:#E6F2EA;font-size:14px;}
+
+.section{scroll-margin-top:20px;margin-bottom:30px;}
+.section h3{font-size:18px;margin-bottom:4px;}
+.section .desc{color:var(--ink-soft);font-size:13px;margin-bottom:16px;}
+
+.empty{border:1.5px dashed var(--line);border-radius:16px;padding:28px 20px;text-align:center;color:var(--ink-soft);font-size:13.5px;background:var(--card);}
+.empty b{display:block;color:var(--ink);font-size:14.5px;margin-bottom:6px;}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.kpi{background:var(--card);border-radius:16px;padding:16px 18px;border-left:5px solid var(--green);}
+.kpi:nth-child(2){border-left-color:var(--gold);}
+.kpi:nth-child(3){border-left-color:var(--amber);}
+.kpi:nth-child(4){border-left-color:var(--green-deep);}
+.kpi .lbl{font-size:12px;color:var(--ink-soft);margin-bottom:6px;}
+.kpi .val{font-size:22px;font-weight:800;font-family:Sora,sans-serif;}
+
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;}
+.panel{background:var(--card);border-radius:16px;padding:18px 20px;border:1px solid var(--line);}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12.5px;}
+.bar-row .name{width:88px;flex:none;color:var(--ink-soft);}
+.bar-track{flex:1;background:var(--green-soft);border-radius:8px;height:16px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--green),var(--gold));}
+.bar-row .num{width:56px;text-align:right;font-weight:700;flex:none;}
+
+.lead{display:flex;flex-direction:column;gap:10px;}
+.lead-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--cream);}
+.rank{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;flex:none;}
+.r1{background:var(--gold);} .r2{background:var(--ink-soft);} .r3{background:var(--amber);} .rn{background:var(--green);}
+.lead-item .who{flex:1;min-width:0;}
+.lead-item .who b{display:block;font-size:13.5px;}
+.lead-item .who span{font-size:11.5px;color:var(--ink-soft);}
+.lead-item .g{font-weight:800;color:var(--green-deep);font-size:14px;}
+
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+select,input[type=text]{padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:13px;}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card);}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px;}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
+th{background:var(--green-soft);color:var(--green-deep);font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;}
+tr:last-child td{border-bottom:none;}
+.tag-status{padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
+.tag-ok{background:var(--green-soft);color:var(--ok);}
+.tag-bad{background:#FBE7E1;color:var(--bad);}
+
+.scheme{background:linear-gradient(120deg,var(--gold-soft),var(--card) 60%);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.scheme .num{font-size:34px;font-weight:800;color:var(--green-deep);font-family:Sora,sans-serif;}
+.scheme h4{font-size:15px;margin-bottom:6px;}
+.scheme p{color:var(--ink-soft);font-size:13px;margin:0;}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr);}
+  .grid2{grid-template-columns:1fr;}
+  .scheme{grid-template-columns:1fr;}
+}
+@media (max-width:720px){
+  .shell{flex-direction:column;}
+  .side{width:100%;height:auto;position:relative;flex-direction:row;align-items:center;overflow-x:auto;padding:14px 16px;}
+  .side .foot{display:none;}
+  nav{flex-direction:row;}
+  .main{padding:20px 16px 40px;}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<input type="file" id="fileInput" accept=".csv,.json,.xlsx,.xls" style="display:none">
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark">🪙</div><div><h1>Reward Fee</h1><span>Pemasar Emas</span></div></div>
+    <nav id="nav">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#monitoring">Monitoring Pemasar</a>
+      <a href="#detail">Detail Data</a>
+      <a href="#scheme">Skema Reward</a>
+    </nav>
+    <div class="foot">Dashboard operasional internal<br>Sumber: data cleansing</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Dashboard / <b>Reward Fee Pemasar</b><div id="statusLine" style="margin-top:4px;">Data belum dimuat</div></div>
+      <div class="actions">
+        <button class="btn gold" onclick="document.getElementById('fileInput').click()">⬆ Impor Excel / CSV / JSON</button>
+        <button class="btn ghost" id="clearBtn" onclick="clearData()" style="display:none;">Hapus data</button>
+      </div>
+    </div>
+
+    <section class="hero section" id="overview">
+      <p class="tag">PROGRAM INSENTIF PEMASAR</p>
+      <h2>Closing emas, raih reward.</h2>
+      <p class="sub">Program reward untuk karyawan jabatan Pemasar yang berhasil closing produk emas dengan perolehan minimal 5 gram. Impor data cleansing (Excel, CSV, atau JSON) untuk mengaktifkan seluruh KPI, chart, leaderboard, dan tabel di bawah ini.</p>
+    </section>
+
+    <section class="section">
+      <div id="kpiEmpty" class="empty"><b>Dataset cleansing belum tersedia di project ini</b>Dashboard tidak menampilkan angka buatan. Impor file Excel (.xlsx), CSV, atau JSON hasil cleansing untuk mengaktifkan seluruh KPI, chart, leaderboard, dan tabel.</div>
+      <div class="kpis" id="kpis" style="display:none;">
+        <div class="kpi"><div class="lbl">Total Pemasar</div><div class="val" id="kpiPemasar">0</div></div>
+        <div class="kpi"><div class="lbl">Total Perolehan (gram)</div><div class="val" id="kpiGram">0</div></div>
+        <div class="kpi"><div class="lbl">Pemasar Achieve</div><div class="val" id="kpiAchieve">0</div></div>
+        <div class="kpi"><div class="lbl">Total Reward</div><div class="val" id="kpiReward">—</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="monitoring">
+      <h3>Analisis Perolehan</h3>
+      <p class="desc">Ringkasan per cabang, produk, dan pencapaian target.</p>
+      <div id="monEmpty" class="empty"><b>Belum ada data untuk ditampilkan</b>Impor data untuk melihat perolehan per cabang dan leaderboard pemasar.</div>
+      <div class="grid2" id="monPanels" style="display:none;">
+        <div class="panel">
+          <h3 style="font-size:14px;margin-bottom:14px;">Perolehan Gram per Cabang</h3>
+          <div id="branchChart"></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:14px;margin-bottom:14px;">Leaderboard Pemasar — Top 5</h3>
+          <div class="lead" id="leaderboard"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="detail">
+      <h3>Detail Data Cleansing</h3>
+      <p class="desc">Monitoring seluruh baris data yang sudah dibersihkan.</p>
+      <div id="tblEmpty" class="empty"><b>Belum ada baris data</b>Impor CSV/JSON untuk menampilkan tabel monitoring lengkap.</div>
+      <div id="tblWrap" style="display:none;">
+        <div class="filters">
+          <select id="fCabang"><option value="">Semua cabang</option></select>
+          <select id="fStatus"><option value="">Semua status</option><option value="Achieve">Achieve</option><option value="Belum Achieve">Belum Achieve</option></select>
+          <input type="text" id="fSearch" placeholder="Cari nama pemasar…">
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Nama</th><th>Cabang</th><th>Produk</th><th>Gram</th><th>Status</th><th>Reward</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scheme">
+      <h3>Skema Reward</h3>
+      <p class="desc">Ketentuan ditampilkan hanya jika tersedia di data cleansing.</p>
+      <div class="scheme">
+        <div><div class="num">5g</div><h4>Target minimal program</h4><p>Closing emas dengan pencapaian terukur — pemasar wajib membukukan penjualan minimal 5 gram untuk memenuhi syarat reward.</p></div>
+        <div><div class="num" id="schemeReward">—</div><h4>Besaran reward</h4><p>Mengikuti nilai yang terdapat pada dataset sumber. Data adalah single source of truth dari dataset cleansing yang diimpor pengguna.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+let records = [];
+try{ const saved = localStorage.getItem('rf_records'); if(saved) records = JSON.parse(saved); }catch(e){}
+
+function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+function parseNum(val){
+  if(val===undefined||val===null||val==='') return NaN;
+  if(typeof val === 'number') return val;
+  let s = val.toString().trim().replace(/[^0-9.,\-]/g,'');
+  if(s==='') return NaN;
+  if(s.includes(',') && s.includes('.')) s = s.replace(/\./g,'').replace(',', '.');
+  else if(s.includes(',') && !s.includes('.')) s = s.replace(',', '.');
+  else if((s.match(/\./g)||[]).length > 1) s = s.replace(/\./g,'');
+  const n = parseFloat(s);
+  return isNaN(n) ? NaN : n;
+}
+function pick(obj, cands){
+  const keys = Object.keys(obj);
+  for(const c of cands){
+    const k = keys.find(k=>norm(k)===c);
+    if(k) return obj[k];
+  }
+  for(const c of cands){
+    const k = keys.find(k=>norm(k).includes(c));
+    if(k) return obj[k];
+  }
+  return undefined;
+}
+function toRecord(o){
+  const nama = pick(o,['nama','pemasar','nama pemasar','sales']) || '-';
+  const cabang = pick(o,['cabang','outlet','unit']) || '-';
+  const produk = pick(o,['produk','product']) || '-';
+  let gram = parseNum(pick(o,['gram','berat','perolehan gram','perolehan']));
+  if(isNaN(gram)) gram = 0;
+  let reward = parseNum(pick(o,['Nilai_Reward_Rp']));
+  let status = pick(o,['status','pencapaian']);
+  status = status ? (norm(status).includes('belum') ? 'Belum Achieve' : 'Achieve') : (gram>=5 ? 'Achieve' : 'Belum Achieve');
+  return {nama, cabang, produk, gram, reward, status};
+}
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim().length);
+  if(!lines.length) return [];
+  const split = l => l.match(/(".*?"|[^,]+)(?=,|$)/g).map(s=>s.replace(/^"|"$/g,'').trim());
+  const headers = split(lines[0]);
+  return lines.slice(1).map(line=>{
+    const vals = split(line);
+    const o = {}; headers.forEach((h,i)=>o[h]=vals[i]); return o;
+  });
+}
+function handleFile(file){
+  const name = file.name.toLowerCase();
+  const isExcel = name.endsWith('.xlsx') || name.endsWith('.xls');
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      let raw;
+      if(isExcel){
+        const wb = XLSX.read(e.target.result, {type:'array'});
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        raw = XLSX.utils.sheet_to_json(sheet, {defval:''});
+      } else if(name.endsWith('.json')){
+        raw = JSON.parse(e.target.result);
+      } else {
+        raw = parseCSV(e.target.result);
+      }
+      records = (Array.isArray(raw)?raw:[]).map(toRecord).filter(r=>r.nama!=='-');
+      try{ localStorage.setItem('rf_records', JSON.stringify(records)); }catch(err){}
+      render();
+    }catch(err){ alert('Gagal membaca file. Pastikan format Excel/CSV/JSON valid.'); }
+  };
+  if(isExcel) reader.readAsArrayBuffer(file);
+  else reader.readAsText(file);
+}
+document.getElementById('fileInput').addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
+function clearData(){ records=[]; try{localStorage.removeItem('rf_records');}catch(e){} render(); }
+
+function render(){
+  const has = records.length>0;
+  document.getElementById('statusLine').textContent = has ? (records.length+' baris data dimuat') : 'Data belum dimuat';
+  document.getElementById('clearBtn').style.display = has ? 'inline-flex' : 'none';
+  document.getElementById('kpiEmpty').style.display = has ? 'none' : 'block';
+  document.getElementById('kpis').style.display = has ? 'grid' : 'none';
+  document.getElementById('monEmpty').style.display = has ? 'none' : 'block';
+  document.getElementById('monPanels').style.display = has ? 'grid' : 'none';
+  document.getElementById('tblEmpty').style.display = has ? 'none' : 'block';
+  document.getElementById('tblWrap').style.display = has ? 'block' : 'none';
+  if(!has) return;
+
+  const byName = {};
+  records.forEach(r=>{ byName[r.nama] = byName[r.nama] || {nama:r.nama, gram:0, reward:0, hasReward:false};
+    byName[r.nama].gram += r.gram;
+    if(!isNaN(r.reward)){ byName[r.nama].reward += r.reward; byName[r.nama].hasReward=true; } });
+  const people = Object.values(byName);
+  const totalGram = records.reduce((s,r)=>s+r.gram,0);
+  const achievers = people.filter(p=>p.gram>=5).length;
+  const anyReward = records.some(r=>!isNaN(r.reward));
+  const totalReward = anyReward ? records.reduce((s,r)=>s+(isNaN(r.reward)?0:r.reward),0) : null;
+
+  document.getElementById('kpiPemasar').textContent = people.length;
+  document.getElementById('kpiGram').textContent = totalGram.toLocaleString('id-ID',{maximumFractionDigits:1});
+  document.getElementById('kpiAchieve').textContent = achievers;
+  document.getElementById('kpiReward').textContent = anyReward ? ('Rp '+totalReward.toLocaleString('id-ID')) : '—';
+  document.getElementById('schemeReward').textContent = anyReward ? ('Rp '+Math.round(totalReward/(people.length||1)).toLocaleString('id-ID')+'/rata²') : '—';
+
+  const byBranch = {};
+  records.forEach(r=>{ byBranch[r.cabang] = (byBranch[r.cabang]||0) + r.gram; });
+  const maxB = Math.max(...Object.values(byBranch),1);
+  document.getElementById('branchChart').innerHTML = Object.entries(byBranch).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([name,val])=>
+    `<div class="bar-row"><div class="name" title="${name}">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(val/maxB*100).toFixed(1)}%"></div></div><div class="num">${val.toLocaleString('id-ID',{maximumFractionDigits:1})}g</div></div>`
+  ).join('') || '<p style="color:var(--ink-soft);font-size:13px;">Tidak ada data cabang.</p>';
+
+  const top5 = [...people].sort((a,b)=>b.gram-a.gram).slice(0,5);
+  document.getElementById('leaderboard').innerHTML = top5.map((p,i)=>
+    `<div class="lead-item"><div class="rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}">${i+1}</div><div class="who"><b>${p.nama}</b><span>${p.hasReward?('Rp '+p.reward.toLocaleString('id-ID')):(p.gram>=5?'Achieve':'Belum Achieve')}</span></div><div class="g">${p.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}g</div></div>`
+  ).join('') || '<p style="color:var(--ink-soft);font-size:13px;">Belum ada pemasar.</p>';
+
+  const cabangSel = document.getElementById('fCabang');
+  const cabangs = [...new Set(records.map(r=>r.cabang))].sort();
+  cabangSel.innerHTML = '<option value="">Semua cabang</option>' + cabangs.map(c=>`<option value="${c}">${c}</option>`).join('');
+
+  drawTable();
+}
+function drawTable(){
+  const cab = document.getElementById('fCabang').value;
+  const stat = document.getElementById('fStatus').value;
+  const search = norm(document.getElementById('fSearch').value);
+  const rows = records.filter(r=>
+    (!cab || r.cabang===cab) && (!stat || r.status===stat) && (!search || norm(r.nama).includes(search))
+  );
+  document.getElementById('tbody').innerHTML = rows.map(r=>
+    `<tr><td>${r.nama}</td><td>${r.cabang}</td><td>${r.produk}</td><td>${r.gram.toLocaleString('id-ID',{maximumFractionDigits:1})}</td>
+     <td><span class="tag-status ${r.status==='Achieve'?'tag-ok':'tag-bad'}">${r.status}</span></td>
+     <td>${isNaN(r.reward)?'—':('Rp '+r.reward.toLocaleString('id-ID'))}</td></tr>`
+  ).join('') || '<tr><td colspan="6" style="color:var(--ink-soft);text-align:center;">Tidak ada baris cocok dengan filter.</td></tr>';
+}
+['fCabang','fStatus','fSearch'].forEach(id=>document.getElementById(id).addEventListener('input',drawTable));
+
+document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{
+  document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));
+  a.classList.add('active');
+}));
+
+render();
+</script>
+</body>
+</html>
